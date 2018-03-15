@@ -15,49 +15,35 @@
 
 <body>
   <div class="container">
-    <div class="header clearfix">
-      <nav>
-        <ul class="nav nav-pills pull-right">
-          <li role="presentation" class="active"><a href="#">Home</a></li>
-          <li role="presentation"><a href="#">About</a></li>
-          <li role="presentation"><a href="#">Contact</a></li>
-        </ul>
-      </nav>
-      <h3 class="text-muted">Hullabaloo</h3>
-    </div>
 
     <div class="jumbotron">
-      <h1>Jumbotron heading</h1>
-      <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-      <p><a class="btn btn-lg btn-success" href="#" role="button">Sign up today</a></p>
+      <h1>Hullabaloo.js</h1>
+      <p class="lead">
+        Простой плагин оповещений. Для его создания использовался плагин <a href="https://github.com/ifightcrime/bootstrap-growl">bootstrap-growl</a>.
+      </p>
+      <a class="btn btn-lg btn-info" href="#" role="button">GitHub</a>
     </div>
 
-    <div class="row marketing">
-      <div class="col-lg-6">
-        <h4>Subheading</h4>
-        <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-        <h4>Subheading</h4>
-        <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-        <h4>Subheading</h4>
-        <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+    <div class="row content">
+      <div class="col-md-6">
+        <h3>Основные изменения:</h3>
+        <ul>
+          <li>Добавленно группировка одинаковых сообщений</li>
+          <li>Добавленно выравнивание сообщений после закрытия</li>
+        </ul>
       </div>
+      <div class="col-md-6">
+        <h3>Примеры:</h3>
 
-      <div class="col-lg-6">
-        <h4>Subheading</h4>
-        <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-        <h4>Subheading</h4>
-        <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-        <h4>Subheading</h4>
-        <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        <button class="btn btn-success" onclick="hulla.send('Все прошло удачно', 'success')">Success</button>
+        <button class="btn btn-info" onclick="hulla.send('Информационное сообщение', 'info')">Info</button>
+        <button class="btn btn-warning" onclick="hulla.send('Внимание!', 'warning')">Warning</button>
+        <button class="btn btn-danger" onclick="hulla.send('Произошла ошибка', 'danger')">Danger</button>
       </div>
     </div>
 
     <footer class="footer">
-      <p>© 2016 Company, Inc.</p>
+      <p>© 2018 Hullabaloo</p>
     </footer>
 
   </div>
@@ -70,7 +56,9 @@
   <script type="text/javascript">
     var hulla = new hullabaloo();
 
-    hulla.send("Произошла ошибка на сервере. Попробуйте перезагрузить страницу и повторить операцию.", "danger");
+    hulla.send("Добро пожаловать!", "success");
+    hulla.send("Рады приветствовать Вас на тестовой странице", "info");
+    hulla.send("Посмотреть как работает Hullabaloo можно в примерах", "warning");
   </script>
 </body>
 
