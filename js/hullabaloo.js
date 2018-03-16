@@ -15,7 +15,7 @@
 
     var hullabaloo = function() {
       // Объект создаваемый сейчас.
-      // генерируется в this.generate() а заполняется в this.send()
+      // генерируется в this.generate()
       this.hullabaloo = {};
 
       // Массив с объектами активных алертов
@@ -23,6 +23,7 @@
 
       this.success = false;
 
+      // Дополнительные настройки дял алерта
       this.options = {
         ele: "body",
         offset: {
@@ -37,6 +38,7 @@
         text: "Произошла неизвестная ошибка. Попробуйте перезагрузить страницу и повторить операцию.",
         icon: "times-circle",
         status: "danger",
+        alertClass: "", // Дополнительные класс для блока алерта
         fnStart: false, // Ф-ия будет выполняться при старте
         fnEnd: false, // Ф-ия будет выполняться по завершинию
         fnEndHide: false, // Ф-ия будет выполняться после закрытия сообщения
@@ -59,13 +61,8 @@
       // Главный алерта если уже есть такие же алерты
       var parent;
 
-      // Если нет тектса сообщения, возьмем дефолтный
-      this.hullabaloo.text = text || this.options.text;
-      // Дефол для статуса сообщеиня
-      this.hullabaloo.status = status || this.options.status;
-
       // Сгенерируем сообщение
-      var hullabaloo = this.generate();
+      var hullabaloo = this.generate(text, status);
 
       // Проверим нет ли уже таких же сообщений
       if (this.hullabaloos.length) {
@@ -162,51 +159,6 @@
       }
     }
 
-    // Обрабатывает ответ Json
-    hullabaloo.prototype.answer = function(data, option) {
-      try {
-        this.hullabaloo.answer = JSON.parse(data);
-      } catch (e) {
-        alert("Ошибка");
-        console.log(data);
-      }
-
-      // Текст
-      this.hullabaloo.text = this.hullabaloo.answer.text || "";
-      // Тип
-      this.hullabaloo.status = this.hullabaloo.answer.status || "success";
-
-      if (typeof this.hullabaloo.answer != "object") {
-        alert("Ошибка");
-        console.log(data);
-        return 0;
-      }
-
-      // Если есть дополнительные параметры
-      /*
-       * success - функция выполняется при успешном ответе от сервера
-       * error - функция выполняется если от сервера пришел ответ с ошибкой
-       * end - функция выполняется при любом ответе от сервера
-       */
-      if (typeof option == "object") {
-        if (typeof option.success == "function" && this.hullabaloo.status == "success")
-          option.success();
-        if (typeof option.error == "function" && this.hullabaloo.status == "danger")
-          option.error();
-        if (typeof option.end == "function")
-          option.end();
-      }
-
-      // Если нет текста и статус SUCCESS то не выводим сообщение
-      // а просто запустим функцию окончания скрипта
-      if (!(this.hullabaloo.status == "success" && this.hullabaloo.text == "")) {
-        this.send();
-      } else {
-        // Запустим функцию после закрытия сообщения
-        if (typeof this.options.fnEnd == "function")
-          this.options.fnEnd();
-      }
-    }
 
     // Анимация для подъема алертов вверх
     hullabaloo.prototype.animate = function(hullabaloo, move) {
@@ -241,33 +193,27 @@
     }
 
     // Генерация алерта на странице
-    hullabaloo.prototype.generate = function() {
+    hullabaloo.prototype.generate = function(text, status) {
       var alertsObj = {
         icon: "", // Иконка
-        status: "", // Статус
-        text: "", // Тект
-        answer: "", // Ответ от сервера
-        elem: {}, // HTML код самого алерта
+        status: status || this.options.status, // Статус
+        text: text || this.options.text, // Тект
+        elem: $("<div>"), // HTML код самого алерта
 
         // Группировка одинаковых алертов
         hullabalooGroup: []
       };
       var option, // Настройки алерта
-        offsetAmount, // Отступы алерта
-        css; // CSS свойства алерта
+          offsetAmount, // Отступы алерта
+          css; // CSS свойства алерта
 
-      // Объеденяет два объекта: option и  options
-      option = $.extend({}, this.options, option);
-      alertsObj.elem = $("<div>");
-      alertsObj.elem.attr("class", "bootstrap-growl alert animation-slideRight");
+      option = this.options;
+
+      // Добавим дополнительный класс
+      alertsObj.elem.attr("class", "hullabaloo alert "+option.alertClass);
 
       // Статус
-      alertsObj.status = this.hullabaloo.status || option.status;
-      alertsObj.elem.addClass("alert-" + this.hullabaloo.status);
-      // Текст
-      alertsObj.text = this.hullabaloo.text || this.options.text;
-      // Answer
-      alertsObj.answer = this.hullabaloo.answer || "";
+      alertsObj.elem.addClass("alert-" + alertsObj.status);
 
       // Кнопка закрытия сообщения
       if (option.allow_dismiss) {
@@ -288,20 +234,12 @@
         alertsObj.icon = option.icon;
 
       // Добавим текст в сообщение
-      alertsObj.elem.append('<i class="fa fa-' + this.hullabaloo.icon + '"></i> ' + this.hullabaloo.text);
-
-      // Если указана позиция окна
-      if (option.top_offset) {
-        option.offset = {
-          from: "top",
-          amount: option.top_offset
-        };
-      }
+      alertsObj.elem.append('<i class="fa fa-' + alertsObj.icon + '"></i> ' + alertsObj.text);
 
       // Присвоим отступ от верха
       offsetAmount = option.offset.amount;
       // Если есть другие алерты то прибавим к отступу их высоту
-      $(".bootstrap-growl").each(function() {
+      $(".hullabaloo").each(function() {
         return offsetAmount = Math.max(offsetAmount, parseInt($(this).css(option.offset.from)) + $(this).outerHeight() + option.stackup_spacing);
       });
 
