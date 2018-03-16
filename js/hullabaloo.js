@@ -1,5 +1,5 @@
 /**
- * hullabaloo v 0.1
+ * hullabaloo v 0.2
  *
  */
 (function(root, factory) {
@@ -32,7 +32,7 @@
         },
         align: "right",
         width: 250,
-        delay: 4000,
+        delay: 5000,
         allow_dismiss: true,
         stackup_spacing: 10,
         text: "Произошла неизвестная ошибка. Попробуйте перезагрузить страницу и повторить операцию.",
@@ -92,7 +92,7 @@
         // Зададим новый счетчик для группы
         parent.timer = setTimeout(function() {
           self.closed(parent);
-        }, 5000);
+        }, this.options.delay);
         // присвоим наш алерт в группу к родителю
         parent.hullabalooGroup.push(hullabaloo);
         // Если алер один
@@ -100,7 +100,7 @@
         // Активируем таймер
         hullabaloo.timer = setTimeout(function() {
           self.closed(hullabaloo);
-        }, 5000);
+        }, this.options.delay);
         // Добавим алерт в общий массив алертов
         this.hullabaloos.push(hullabaloo);
       }
@@ -218,7 +218,7 @@
       // Кнопка закрытия сообщения
       if (option.allow_dismiss) {
         alertsObj.elem.addClass("alert-dismissible");
-        alertsObj.elem.append("<button  class=\"close\" data-dismiss=\"alert\" type=\"button\"><span aria-hidden=\"true\">&#215;</span><span class=\"sr-only\">Close</span></button>");
+        alertsObj.elem.append("<button  class=\"close\" data-dismiss=\"alert\" type=\"button\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>");
       }
 
       // Icon
