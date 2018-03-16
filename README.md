@@ -6,11 +6,11 @@
 ## Зависимости
 
 1. Latest version of jQuery.
-2. [Twitter Bootstrap](http://twitter.github.com/bootstrap/index.html). (current rev tested with 3.3.7)
+2. [Twitter Bootstrap](http://twitter.github.com/bootstrap/index.html). (current rev tested with 4.0.0)
 
 ## Использование
 
-Подключите файл все зависимости и `hullabaloo.js` на свою страницу и инициализируйте и вызывайте.
+Подключите файл все зависимости и `hullabaloo.js` на свою страницу, Создайте главный объект hullabaloo и вызывайте.
 
 ```javascript
 $.hulla = new hullabaloo();
