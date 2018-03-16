@@ -59,11 +59,10 @@
       // Главный алерта если уже есть такие же алерты
       var parent;
 
-      // Если воспользовались функцией сенд напрямую
-      if (typeof text !== "undefined")
-        this.hullabaloo.text = text;
-      if (typeof status !== "undefined")
-        this.hullabaloo.status = status;
+      // Если нет тектса сообщения, возьмем дефолтный
+      this.hullabaloo.text = text || this.options.text;
+      // Дефол для статуса сообщеиня
+      this.hullabaloo.status = status || this.options.status;
 
       // Сгенерируем сообщение
       var hullabaloo = this.generate();
