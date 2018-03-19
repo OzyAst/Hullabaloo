@@ -91,6 +91,7 @@
         parent.timer = setTimeout(function() {
           self.closed(parent);
         }, this.options.delay);
+        hullabaloo.parent = parent;
         // присвоим наш алерт в группу к родителю
         parent.hullabalooGroup.push(hullabaloo);
         // Если алер один
@@ -119,13 +120,18 @@
       var self = this;
       var idx, i, move, next;
 
+      if("parent" in hullabaloo){
+        hullabaloo = hullabaloo.parent;
+      }
+
       // проверяем есть ли массив с алертами
       if (this.hullabaloos !== null) {
         // Найдем в массиве закрываемый алерт
         idx = $.inArray(hullabaloo, this.hullabaloos);
+        if(idx == -1) return;
 
-        // Если это група алертов, то закроим все
-        if (hullabaloo.hullabalooGroup !== "undefined" && hullabaloo.hullabalooGroup.length) {
+        // Если это група алертов, то закроем все
+        if (!!hullabaloo.hullabalooGroup && hullabaloo.hullabalooGroup.length) {
           for (i = 0; i < hullabaloo.hullabalooGroup.length; i++) {
             // закрыть алерт
             $(hullabaloo.hullabalooGroup[i].elem).remove();
@@ -196,6 +202,7 @@
       }
     }
 
+
     // Генерация алерта на странице
     hullabaloo.prototype.generate = function(text, status) {
       var alertsObj = {
@@ -210,6 +217,7 @@
       var option, // Настройки алерта
           offsetAmount, // Отступы алерта
           css; // CSS свойства алерта
+          self = this;
 
       option = this.options;
 
@@ -222,8 +230,12 @@
       // Кнопка закрытия сообщения
       if (option.allow_dismiss) {
         alertsObj.elem.addClass("alert-dismissible");
-        alertsObj.elem.append("<button  class=\"close\" data-dismiss=\"alert\" type=\"button\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>");
+        alertsObj.elem.append("<button class=\"close\" type=\"button\" id=\"hullabalooClose\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>");
+        $( "#hullabalooClose", $(alertsObj.elem) ).bind( "click", function(){
+          self.closed(alertsObj);
+        });
       }
+
 
       // Icon
       if (alertsObj.status == "success")
