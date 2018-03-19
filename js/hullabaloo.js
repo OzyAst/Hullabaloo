@@ -36,7 +36,14 @@
         allow_dismiss: true,
         stackup_spacing: 10,
         text: "Произошла неизвестная ошибка. Попробуйте перезагрузить страницу и повторить операцию.",
-        icon: "times-circle",
+        icon: {
+          success: "fa fa-check-circle",
+          info: "fa fa-info-circle",
+          warning: "fa fa-life-ring",
+          danger: "fa fa-exclamation-circle",
+          light: "fa fa-sun",
+          dark: "fa fa-moon"
+        },
         status: "danger",
         alertClass: "", // Дополнительные класс для блока алерта
         fnStart: false, // Ф-ия будет выполняться при старте
@@ -236,21 +243,29 @@
         });
       }
 
-
       // Icon
-      if (alertsObj.status == "success")
-        alertsObj.icon = "check";
-      else if (alertsObj.status == "info-circle")
-        alertsObj.icon = "info";
-      else if (this.hullabaloo.status == "danger")
-        alertsObj.icon = "times-circle";
-      else if (this.hullabaloo.status == "warning")
-        alertsObj.icon = "exclamation-triangle";
-      else
-        alertsObj.icon = option.icon;
+      switch (alertsObj.status) {
+        case "success":
+          alertsObj.icon = option.icon.success;
+          break;
+        case "info":
+          alertsObj.icon = option.icon.info;
+          break;
+        case "danger":
+          alertsObj.icon = option.icon.danger;
+          break;
+        case "light":
+          alertsObj.icon = option.icon.light;
+          break;
+        case "dark":
+          alertsObj.icon = option.icon.dark;
+          break;
+        default:
+          alertsObj.icon = option.icon.warning;
+      }
 
       // Добавим текст в сообщение
-      alertsObj.elem.append('<i class="fa fa-' + alertsObj.icon + '"></i> ' + alertsObj.text);
+      alertsObj.elem.append("<i class=\"" + alertsObj.icon + "\"></i> " + alertsObj.text);
 
       // Присвоим отступ от верха
       offsetAmount = option.offset.amount;
