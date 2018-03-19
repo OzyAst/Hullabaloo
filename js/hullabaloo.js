@@ -1,5 +1,5 @@
 /**
- * hullabaloo v 0.2
+ * hullabaloo v 0.3
  *
  */
 (function(root, factory) {
@@ -35,8 +35,15 @@
         delay: 5000,
         allow_dismiss: true,
         stackup_spacing: 10,
-        text: "Произошла неизвестная ошибка. Попробуйте перезагрузить страницу и повторить операцию.",
-        icon: "times-circle",
+        text: "Произошла неизвестная ошибка.",
+        icon: {
+          success: "fa fa-check-circle",
+          info: "fa fa-info-circle",
+          warning: "fa fa-life-ring",
+          danger: "fa fa-exclamation-circle",
+          light: "fa fa-sun",
+          dark: "fa fa-moon"
+        },
         status: "danger",
         alertClass: "", // Дополнительные класс для блока алерта
         fnStart: false, // Ф-ия будет выполняться при старте
@@ -66,7 +73,7 @@
 
       // Проверим нет ли уже таких же сообщений
       if (this.hullabaloos.length) {
-        // Переберем веь массив
+        // Пройдем до конца массива алертов, пока не найдем совпадение
         while (i >= 0 && flag) {
           // Если у нас присутствуют одинаковые сообщения (сгруппируем их)
           if (this.hullabaloos[i].text == hullabaloo.text && this.hullabaloos[i].status == hullabaloo.status) {
@@ -74,16 +81,14 @@
             parent = this.hullabaloos[i];
             // Флаг выхода из цикла
             flag = 0;
+
             // Переместим наш алерт на место гланого со смещением
-            hullabaloo.elem.css("top", parseInt(parent.elem.css("top")) + 4);
-            hullabaloo.elem.css("right", parseInt(parent.elem.css("right")) + 4);
+            hullabaloo.elem.css(this.options.offset.from, parseInt(parent.elem.css(this.options.offset.from)) + 4);
+            hullabaloo.elem.css(this.options.align, parseInt(parent.elem.css(this.options.align)) + 4);
           }
           i--;
         }
       }
-
-      // Запомним позицию алерта, понадобиться для перемещения алертов вверх
-      hullabaloo.posTop = parseInt(hullabaloo.elem.css("top"));
 
       // Проверяем, группа алертов у нас или только один
       if (typeof parent == 'object') {
@@ -93,10 +98,14 @@
         parent.timer = setTimeout(function() {
           self.closed(parent);
         }, this.options.delay);
+        hullabaloo.parent = parent;
         // присвоим наш алерт в группу к родителю
         parent.hullabalooGroup.push(hullabaloo);
         // Если алер один
       } else {
+        // Запомним позицию алерта, понадобиться для перемещения алертов вверх
+        hullabaloo.position = parseInt(hullabaloo.elem.css(this.options.offset.from));
+
         // Активируем таймер
         hullabaloo.timer = setTimeout(function() {
           self.closed(hullabaloo);
@@ -118,34 +127,41 @@
       var self = this;
       var idx, i, move, next;
 
+      if("parent" in hullabaloo){
+        hullabaloo = hullabaloo.parent;
+      }
+
       // проверяем есть ли массив с алертами
       if (this.hullabaloos !== null) {
         // Найдем в массиве закрываемый алерт
         idx = $.inArray(hullabaloo, this.hullabaloos);
+        if(idx == -1) return;
 
-        // Если это група алертов, то закроим все
-        if (hullabaloo.hullabalooGroup !== "undefined" && hullabaloo.hullabalooGroup.length) {
+        // Если это група алертов, то закроем все
+        if (!!hullabaloo.hullabalooGroup && hullabaloo.hullabalooGroup.length) {
           for (i = 0; i < hullabaloo.hullabalooGroup.length; i++) {
             // закрыть алерт
-            $(hullabaloo.hullabalooGroup[i].elem).alert("close");
+            $(hullabaloo.hullabalooGroup[i].elem).remove();
           }
         }
 
         // Закрываем наш алерт
-        $(this.hullabaloos[idx].elem).alert("close");
+        $(this.hullabaloos[idx].elem).fadeOut("slow", function(){
+          this.remove();
+        });
 
         if (idx !== -1) {
+          next = idx + 1;
           // Если в массиве есть другие алерты, поднимем их на место закрытого
-          if (this.hullabaloos.length > 1) {
-            next = idx + 1;
+          if (this.hullabaloos.length > 1 && next < this.hullabaloos.length) {
             // Отнимаем верхнюю гранизу закрытого алерта от верхней границы следующего алерта
             // и расчитываем на сколько двигать все алерты
-            move = this.hullabaloos[next].posTop - this.hullabaloos[idx].posTop;
+            move = this.hullabaloos[next].position - this.hullabaloos[idx].position;
 
             // двигаем все алерты, которые идут за закрытым
             for (i = idx; i < this.hullabaloos.length; i++) {
-              this.animate(self.hullabaloos[i], parseInt(self.hullabaloos[i].posTop) - move);
-              self.hullabaloos[i].posTop = parseInt(self.hullabaloos[i].posTop) - move
+              this.animate(self.hullabaloos[i], parseInt(self.hullabaloos[i].position) - move);
+              self.hullabaloos[i].position = parseInt(self.hullabaloos[i].position) - move
             }
           }
 
@@ -162,13 +178,14 @@
 
     // Анимация для подъема алертов вверх
     hullabaloo.prototype.animate = function(hullabaloo, move) {
+      var self = this;
       var timer,
-        top, // Верх алерта, который тащим
+        position, // Верх алерта, который тащим
         i, // Счетчик для перебора группы алертов
         group = 0; // Обозначение, группа алертов или одиночный
 
-      // Верх алерта, который тащим
-      top = parseInt(hullabaloo.elem.css("top"));
+      // Верх / Низ алерта, который тащим
+      position = parseInt(hullabaloo.elem.css(self.options.offset.from));
       // Если это группа алертов
       group = hullabaloo.hullabalooGroup.length;
 
@@ -176,21 +193,22 @@
       timer = setInterval(frame, 2);
       // Ф-ия для таймера
       function frame() {
-        if (top == move) {
+        if (position == move) {
           clearInterval(timer);
         } else {
-          top--;
-          hullabaloo.elem.css("top", top);
+          position--;
+          hullabaloo.elem.css(self.options.offset.from, position);
 
           // Если это группа алертов
           if (group) {
             for (i = 0; i < group; i++) {
-              hullabaloo.hullabalooGroup[i].elem.css("top", top + 5);
+              hullabaloo.hullabalooGroup[i].elem.css(self.options.offset.from, position + 5);
             }
           }
         }
       }
     }
+
 
     // Генерация алерта на странице
     hullabaloo.prototype.generate = function(text, status) {
@@ -206,6 +224,7 @@
       var option, // Настройки алерта
           offsetAmount, // Отступы алерта
           css; // CSS свойства алерта
+          self = this;
 
       option = this.options;
 
@@ -218,23 +237,35 @@
       // Кнопка закрытия сообщения
       if (option.allow_dismiss) {
         alertsObj.elem.addClass("alert-dismissible");
-        alertsObj.elem.append("<button  class=\"close\" data-dismiss=\"alert\" type=\"button\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>");
+        alertsObj.elem.append("<button class=\"close\" type=\"button\" id=\"hullabalooClose\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>");
+        $( "#hullabalooClose", $(alertsObj.elem) ).bind( "click", function(){
+          self.closed(alertsObj);
+        });
       }
 
       // Icon
-      if (alertsObj.status == "success")
-        alertsObj.icon = "check";
-      else if (alertsObj.status == "info-circle")
-        alertsObj.icon = "info";
-      else if (this.hullabaloo.status == "danger")
-        alertsObj.icon = "times-circle";
-      else if (this.hullabaloo.status == "warning")
-        alertsObj.icon = "exclamation-triangle";
-      else
-        alertsObj.icon = option.icon;
+      switch (alertsObj.status) {
+        case "success":
+          alertsObj.icon = option.icon.success;
+          break;
+        case "info":
+          alertsObj.icon = option.icon.info;
+          break;
+        case "danger":
+          alertsObj.icon = option.icon.danger;
+          break;
+        case "light":
+          alertsObj.icon = option.icon.light;
+          break;
+        case "dark":
+          alertsObj.icon = option.icon.dark;
+          break;
+        default:
+          alertsObj.icon = option.icon.warning;
+      }
 
       // Добавим текст в сообщение
-      alertsObj.elem.append('<i class="fa fa-' + alertsObj.icon + '"></i> ' + alertsObj.text);
+      alertsObj.elem.append("<i class=\"" + alertsObj.icon + "\"></i> " + alertsObj.text);
 
       // Присвоим отступ от верха
       offsetAmount = option.offset.amount;
@@ -273,7 +304,6 @@
 
       return alertsObj;
     };
-
 
     return hullabaloo;
   };

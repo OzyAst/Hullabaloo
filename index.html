@@ -7,7 +7,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
   <!-- Отдельный файл стилей дял блока алертов -->
-  <!-- <link rel="stylesheet" href="css/alert.css"> -->
+  <!-- <link rel="stylesheet" href="css/hullabaloo.css"> -->
+
+  <link rel="stylesheet" href="css/fontawesome.min.css">
   <link rel="stylesheet" href="css/bootstrap-4.0.0.min.css">
   <link rel="stylesheet" href="css/style.css">
 
@@ -36,12 +38,12 @@
       <div class="col-md-6">
         <h3>Примеры:</h3>
 
-        <button class="btn btn-success m-2" onclick="hulla.send('Все прошло удачно', 'success')">Success</button>
-        <button class="btn btn-info m-2" onclick="hulla.send('Информационное сообщение', 'info')">Info</button>
-        <button class="btn btn-warning m-2" onclick="hulla.send('Внимание!', 'warning')">Warning</button>
-        <button class="btn btn-danger m-2" onclick="hulla.send('Произошла ошибка', 'danger')">Danger</button>
-        <button class="btn btn-light m-2" onclick="hulla.send('Светлый стиль сообщения', 'light')">Light</button>
-        <button class="btn btn-dark m-2" onclick="hulla.send('Темный стиль сообщения', 'dark')">Dark</button>
+        <button class="btn btn-success m-2" onclick="$.hulla.send('Все прошло удачно', 'success')">Success</button>
+        <button class="btn btn-info m-2" onclick="$.hulla.send('Информационное сообщение', 'info')">Info</button>
+        <button class="btn btn-warning m-2" onclick="$.hulla.send('Внимание!', 'warning')">Warning</button>
+        <button class="btn btn-danger m-2" onclick="$.hulla.send('Произошла ошибка', 'danger')">Danger</button>
+        <button class="btn btn-light m-2" onclick="$.hulla.send('Светлый стиль сообщения', 'light')">Light</button>
+        <button class="btn btn-dark m-2" onclick="$.hulla.send('Темный стиль сообщения', 'dark')">Dark</button>
       </div>
     </div>
 
@@ -57,11 +59,19 @@
   <script src="js/hullabaloo.js"></script>
 
   <script type="text/javascript">
-    var hulla = new hullabaloo();
+    $.hulla = new hullabaloo();
 
-    hulla.send("Добро пожаловать!", "success");
-    hulla.send("Рады приветствовать Вас на тестовой странице", "info");
-    hulla.send("Посмотреть как работает Hullabaloo можно в примерах", "warning");
+    setTimeout(function() {
+      $.hulla.send("Добро пожаловать!", "success");
+    }, 1000);
+
+    setTimeout(function() {
+      $.hulla.send("Рады приветствовать Вас на тестовой странице", "info");
+    }, 2000);
+
+    setTimeout(function() {
+      $.hulla.send("Посмотреть как работает Hullabaloo можно в примерах", "warning");
+    }, 3000);
   </script>
 </body>
 
