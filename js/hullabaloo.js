@@ -1,5 +1,5 @@
 /**
- * hullabaloo v 0.2
+ * hullabaloo v 0.3
  *
  */
 (function(root, factory) {
@@ -35,7 +35,7 @@
         delay: 5000,
         allow_dismiss: true,
         stackup_spacing: 10,
-        text: "Произошла неизвестная ошибка. Попробуйте перезагрузить страницу и повторить операцию.",
+        text: "Произошла неизвестная ошибка.",
         icon: {
           success: "fa fa-check-circle",
           info: "fa fa-info-circle",
