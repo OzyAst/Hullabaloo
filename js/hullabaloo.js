@@ -74,16 +74,17 @@
             parent = this.hullabaloos[i];
             // Флаг выхода из цикла
             flag = 0;
+
             // Переместим наш алерт на место гланого со смещением
-            hullabaloo.elem.css("top", parseInt(parent.elem.css("top")) + 4);
-            hullabaloo.elem.css("right", parseInt(parent.elem.css("right")) + 4);
+            hullabaloo.elem.css(this.options.offset.from, parseInt(parent.elem.css(this.options.offset.from)) + 4);
+            hullabaloo.elem.css(this.options.align, parseInt(parent.elem.css(this.options.align)) + 4);
           }
           i--;
         }
       }
 
       // Запомним позицию алерта, понадобиться для перемещения алертов вверх
-      hullabaloo.posTop = parseInt(hullabaloo.elem.css("top"));
+      hullabaloo.position = parseInt(hullabaloo.elem.css(this.options.offset.from));
 
       // Проверяем, группа алертов у нас или только один
       if (typeof parent == 'object') {
@@ -140,12 +141,12 @@
             next = idx + 1;
             // Отнимаем верхнюю гранизу закрытого алерта от верхней границы следующего алерта
             // и расчитываем на сколько двигать все алерты
-            move = this.hullabaloos[next].posTop - this.hullabaloos[idx].posTop;
+            move = this.hullabaloos[next].position - this.hullabaloos[idx].position;
 
             // двигаем все алерты, которые идут за закрытым
             for (i = idx; i < this.hullabaloos.length; i++) {
-              this.animate(self.hullabaloos[i], parseInt(self.hullabaloos[i].posTop) - move);
-              self.hullabaloos[i].posTop = parseInt(self.hullabaloos[i].posTop) - move
+              this.animate(self.hullabaloos[i], parseInt(self.hullabaloos[i].position) - move);
+              self.hullabaloos[i].position = parseInt(self.hullabaloos[i].position) - move
             }
           }
 
@@ -162,13 +163,14 @@
 
     // Анимация для подъема алертов вверх
     hullabaloo.prototype.animate = function(hullabaloo, move) {
+      var self = this;
       var timer,
-        top, // Верх алерта, который тащим
+        position, // Верх алерта, который тащим
         i, // Счетчик для перебора группы алертов
         group = 0; // Обозначение, группа алертов или одиночный
 
-      // Верх алерта, который тащим
-      top = parseInt(hullabaloo.elem.css("top"));
+      // Верх / Низ алерта, который тащим
+      position = parseInt(hullabaloo.elem.css(self.options.offset.from));
       // Если это группа алертов
       group = hullabaloo.hullabalooGroup.length;
 
@@ -176,16 +178,16 @@
       timer = setInterval(frame, 2);
       // Ф-ия для таймера
       function frame() {
-        if (top == move) {
+        if (position == move) {
           clearInterval(timer);
         } else {
-          top--;
-          hullabaloo.elem.css("top", top);
+          position--;
+          hullabaloo.elem.css(self.options.offset.from, position);
 
           // Если это группа алертов
           if (group) {
             for (i = 0; i < group; i++) {
-              hullabaloo.hullabalooGroup[i].elem.css("top", top + 5);
+              hullabaloo.hullabalooGroup[i].elem.css(self.options.offset.from, position + 5);
             }
           }
         }
