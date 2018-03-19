@@ -1,16 +1,16 @@
 # Hullabaloo.js
 
-Простой плагин оповещений, который использует стили сдандартных Bootstrap алертов.
+Простой плагин оповещений, который использует стили стандартных Bootstrap алертов.
 Для его создания использовался плагин [bootstrap-growl](https://github.com/ifightcrime/bootstrap-growl).
 
 ## Зависимости
 
 1. Latest version of jQuery.
-2. [Twitter Bootstrap](http://twitter.github.com/bootstrap/index.html). (current rev tested with 4.0.0)
+2. [Twitter Bootstrap](http://twitter.github.com/bootstrap/index.html). (current rev tested with 4.0.0) (Необязательно)
 
 ## Использование
 
-Подключите файл все зависимости и `hullabaloo.js` на свою страницу, Создайте главный объект hullabaloo и вызывайте.
+Подключите стили bootstrap или файл стилей `hullabaloo.css` и `hullabaloo.js` на свою страницу, Создайте главный объект hullabaloo и вызывайте.
 
 ```javascript
 $.hulla = new hullabaloo();
@@ -50,6 +50,8 @@ $.hulla.options.<опция> = <значение>;
 
 | Option        | Default  | Description |
 | ------------- | -------- | ----------- |
+| offset.from   | top      | Положение алерта по вертикали |
+| align         | right    | Положение алерта по горизонтале |
 | width         | _250_    | Ширина алерта |
 | delay         | _4000_   | Задержка отображения |
 | allow_dismiss | true     | Кнопка закрытия алерта |
