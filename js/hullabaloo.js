@@ -66,7 +66,7 @@
 
       // Проверим нет ли уже таких же сообщений
       if (this.hullabaloos.length) {
-        // Переберем веь массив
+        // Пройдем до конца массива алертов, пока не найдем совпадение
         while (i >= 0 && flag) {
           // Если у нас присутствуют одинаковые сообщения (сгруппируем их)
           if (this.hullabaloos[i].text == hullabaloo.text && this.hullabaloos[i].status == hullabaloo.status) {
@@ -83,9 +83,6 @@
         }
       }
 
-      // Запомним позицию алерта, понадобиться для перемещения алертов вверх
-      hullabaloo.position = parseInt(hullabaloo.elem.css(this.options.offset.from));
-
       // Проверяем, группа алертов у нас или только один
       if (typeof parent == 'object') {
         // Если алерт в группе то добавим его в группу и обнулим счетчик группы
@@ -98,6 +95,9 @@
         parent.hullabalooGroup.push(hullabaloo);
         // Если алер один
       } else {
+        // Запомним позицию алерта, понадобиться для перемещения алертов вверх
+        hullabaloo.position = parseInt(hullabaloo.elem.css(this.options.offset.from));
+
         // Активируем таймер
         hullabaloo.timer = setTimeout(function() {
           self.closed(hullabaloo);
@@ -128,17 +128,19 @@
         if (hullabaloo.hullabalooGroup !== "undefined" && hullabaloo.hullabalooGroup.length) {
           for (i = 0; i < hullabaloo.hullabalooGroup.length; i++) {
             // закрыть алерт
-            $(hullabaloo.hullabalooGroup[i].elem).alert("close");
+            $(hullabaloo.hullabalooGroup[i].elem).remove();
           }
         }
 
         // Закрываем наш алерт
-        $(this.hullabaloos[idx].elem).alert("close");
+        $(this.hullabaloos[idx].elem).fadeOut("slow", function(){
+          this.remove();
+        });
 
         if (idx !== -1) {
+          next = idx + 1;
           // Если в массиве есть другие алерты, поднимем их на место закрытого
-          if (this.hullabaloos.length > 1) {
-            next = idx + 1;
+          if (this.hullabaloos.length > 1 && next < this.hullabaloos.length) {
             // Отнимаем верхнюю гранизу закрытого алерта от верхней границы следующего алерта
             // и расчитываем на сколько двигать все алерты
             move = this.hullabaloos[next].position - this.hullabaloos[idx].position;
@@ -275,7 +277,6 @@
 
       return alertsObj;
     };
-
 
     return hullabaloo;
   };
