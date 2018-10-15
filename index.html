@@ -44,6 +44,10 @@
         <button class="btn btn-danger m-2" onclick="$.hulla.send('Произошла ошибка', 'danger')">Danger</button>
         <button class="btn btn-light m-2" onclick="$.hulla.send('Светлый стиль сообщения', 'light')">Light</button>
         <button class="btn btn-dark m-2" onclick="$.hulla.send('Темный стиль сообщения', 'dark')">Dark</button>
+        <br/><br/>
+
+        <p>Примеры без группировки:</p>
+        <button class="btn btn-success m-2" onclick="$.hulla.send('Все прошло удачно', 'success', 0)">Success</button>
       </div>
     </div>
 
@@ -60,6 +64,11 @@
 
   <script type="text/javascript">
     $.hulla = new hullabaloo();
+    $.hulla.options.offset = {
+        from: "top",
+        amount: 200
+    };
+    $.hulla.options.stackup_spacing = 50;
 
     setTimeout(function() {
       $.hulla.send("Добро пожаловать!", "success");

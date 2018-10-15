@@ -49,12 +49,16 @@
         fnStart: false, // Ф-ия будет выполняться при старте
         fnEnd: false, // Ф-ия будет выполняться по завершинию
         fnEndHide: false, // Ф-ия будет выполняться после закрытия сообщения
-
       };
     };
 
-    // Выводим сообщение
-    hullabaloo.prototype.send = function(text, status) {
+    /*
+     * Выводим сообщение
+     * text - текст сообщения
+     * status - статус сообщения
+     * group - Группировка сообщений
+     */
+    hullabaloo.prototype.send = function(text, status, group = 1) {
       // Запустим функцию при старте
       if (typeof this.options.fnStart == "function")
         this.options.fnStart();
@@ -72,7 +76,7 @@
       var hullabaloo = this.generate(text, status);
 
       // Проверим нет ли уже таких же сообщений
-      if (this.hullabaloos.length) {
+      if (group && this.hullabaloos.length) {
         // Пройдем до конца массива алертов, пока не найдем совпадение
         while (i >= 0 && flag) {
           // Если у нас присутствуют одинаковые сообщения (сгруппируем их)
@@ -269,6 +273,7 @@
 
       // Присвоим отступ от верха
       offsetAmount = option.offset.amount;
+    
       // Если есть другие алерты то прибавим к отступу их высоту
       $(".hullabaloo").each(function() {
         return offsetAmount = Math.max(offsetAmount, parseInt($(this).css(option.offset.from)) + $(this).outerHeight() + option.stackup_spacing);

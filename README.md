@@ -13,9 +13,23 @@
 Подключите стили bootstrap или файл стилей `hullabaloo.css` и `hullabaloo.js` на свою страницу, Создайте главный объект hullabaloo и вызывайте.
 
 ```javascript
+// init
 $.hulla = new hullabaloo();
+// Задаем положение алерта и отступ от верха
+$.hulla.options.offset = {
+    from: "top",
+    amount: 40
+};
+// Задаем расстояние между алертами
+$.hulla.options.stackup_spacing = 50;
+
+// Вызываем алерт
 $.hulla.send("Добро пожаловать!", "success");
+
+// Принудительная отмена группировки
+$.hulla.send("Добро пожаловать!", "success", 0);
 ```
+
 
 ## Дополнительные функции
 
@@ -63,4 +77,4 @@ $.hulla.options.<опция> = <значение>;
 | icon.light    |          | Иконка по умолчанию                   |
 | icon.dark     |          | Иконка по умолчанию                   |
 | status        | _danger_ | Статус по умолчанию                   |
-| alertClass    | _пусто_  | Дополнительные класс для блока алерта |
+| alertClass    | _empty_  | Дополнительные класс для блока алерта |
