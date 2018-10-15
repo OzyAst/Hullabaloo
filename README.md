@@ -17,11 +17,11 @@
 $.hulla = new hullabaloo();
 // Задаем положение алерта и отступ от верха
 $.hulla.options.offset = {
-    from: "bottom",
-    amount: 140
+    from: "top",
+    amount: 30
 };
 // Задаем расстояние между алертами
-$.hulla.options.stackup_spacing = 50;
+$.hulla.options.stackup_spacing = 15;
 
 // Вызываем алерт
 $.hulla.send("Добро пожаловать!", "success");

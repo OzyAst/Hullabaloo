@@ -63,14 +63,7 @@
   <script src="js/hullabaloo.js"></script>
 
   <script type="text/javascript">
-    // init
     $.hulla = new hullabaloo();
-    // Задаем позицию алерта и отступ от края
-    $.hulla.options.offset = {
-        from: "top",
-        amount: 30
-    };
-    $.hulla.options.stackup_spacing = 20;
 
     setTimeout(function() {
       $.hulla.send("Добро пожаловать!", "success");
