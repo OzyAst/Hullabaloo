@@ -1,19 +1,19 @@
 /**
- * hullabaloo v 0.3
+ * hullabaloo v 0.4
  *
  */
-(function(root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define(['buoy'], factory(root));
-  } else if (typeof exports === 'object') {
-    module.exports = factory(require('buoy'));
-  } else {
-    root.hullabaloo = factory(root, root.buoy);
-  }
-})(typeof global !== 'undefined' ? global : this.window || this.global, function(root) {
-  var init = function(root) {
+ (function (root, factory) {
+     if (typeof exports === "object") {
+         module.exports = factory();
+     } else if (typeof define === "function" && define.amd) {
+         define(['jquery'], factory);
+     } else {
+         root.hullabaloo = factory();
+     }
+ }(this, function () {
+   return new function () {
 
-    var hullabaloo = function() {
+    this.hullabaloo = function() {
       // Объект создаваемый сейчас.
       // генерируется в this.generate()
       this.hullabaloo = {};
@@ -58,7 +58,7 @@
      * status - статус сообщения
      * group - Группировка сообщений
      */
-    hullabaloo.prototype.send = function(text, status, group = 1) {
+    this.hullabaloo.prototype.send = function(text, status, group = 1) {
       // Запустим функцию при старте
       if (typeof this.options.fnStart == "function")
         this.options.fnStart();
@@ -85,7 +85,7 @@
             parent = this.hullabaloos[i];
             // Флаг выхода из цикла
             flag = 0;
-            
+
             // Переместим наш алерт на место гланого со смещением
             hullabaloo.elem.css(this.options.offset.from, parseInt(parent.elem.css(this.options.offset.from)) + 4);
             hullabaloo.elem.css(this.options.align, parseInt(parent.elem.css(this.options.align)) + 4);
@@ -126,8 +126,9 @@
         this.options.fnEnd();
     }
 
+
     // Закрывает алерт
-    hullabaloo.prototype.closed = function(hullabaloo) {
+    this.hullabaloo.prototype.closed = function(hullabaloo) {
       var self = this;
       var idx, i, move, next;
 
@@ -181,7 +182,7 @@
 
 
     // Анимация для подъема алертов вверх
-    hullabaloo.prototype.animate = function(hullabaloo, move) {
+    this.hullabaloo.prototype.animate = function(hullabaloo, move) {
       var self = this;
       var timer,
         position, // Верх алерта, который тащим
@@ -215,7 +216,7 @@
 
 
     // Генерация алерта на странице
-    hullabaloo.prototype.generate = function(text, status) {
+    this.hullabaloo.prototype.generate = function(text, status) {
       var alertsObj = {
         icon: "", // Иконка
         status: status || this.options.status, // Статус
@@ -310,7 +311,7 @@
       return alertsObj;
     };
 
-    return hullabaloo;
-  };
-  return init(root);
-});
+
+    return this.hullabaloo;
+  }
+}));
